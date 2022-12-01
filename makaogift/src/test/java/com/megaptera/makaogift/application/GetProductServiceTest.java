@@ -5,31 +5,28 @@ import com.megaptera.makaogift.repositories.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-class GetProductsServiceTest {
+class GetProductServiceTest {
+    private GetProductService getProductService;
     private ProductRepository productRepository;
-    private GetProductsService getProductsService;
 
     @BeforeEach
     void setup() {
         productRepository = mock(ProductRepository.class);
-        getProductsService = new GetProductsService(productRepository);
+        getProductService = new GetProductService(productRepository);
     }
 
     @Test
-    void getProducts() {
-        Product product = mock(Product.class);
+    void getProduct() {
+        given(productRepository.findById(1L))
+                .willReturn(Optional.of(Product.fake(1L)));
 
-        given(productRepository.findAll())
-                .willReturn(List.of(product));
-
-        assertThat(getProductsService.getProducts())
-                .hasSize(1);
+        assertThat(getProductService.getProduct(1L).id())
+                .isEqualTo(1L);
     }
 }
