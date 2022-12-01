@@ -1,7 +1,6 @@
 package com.megaptera.makaogift.models;
 
 import com.megaptera.makaogift.dtos.UserCreationDto;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -13,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="PERSON")
+@Table(name = "PERSON")
 public class User {
     @Id
     @GeneratedValue
@@ -85,5 +84,9 @@ public class User {
 
     public void changePassword(String password, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(password);
+    }
+
+    public boolean authenticate(String password, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(password, this.password);
     }
 }

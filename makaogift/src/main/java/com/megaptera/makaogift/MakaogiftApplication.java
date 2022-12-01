@@ -1,5 +1,7 @@
 package com.megaptera.makaogift;
 
+import com.megaptera.makaogift.utils.JwtUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class MakaogiftApplication {
+	@Value("${jwt.secret}")
+	private String secret;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MakaogiftApplication.class, args);
@@ -34,5 +38,10 @@ public class MakaogiftApplication {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new Argon2PasswordEncoder(16, 32, 1, 1 << 14, 2);
+	}
+
+	@Bean
+	public JwtUtil jwtUtil() {
+		return new JwtUtil(secret);
 	}
 }
