@@ -1,6 +1,7 @@
 package com.megaptera.makaogift.models;
 
 import com.megaptera.makaogift.dtos.UserCreationDto;
+import com.megaptera.makaogift.dtos.UserDto;
 import com.megaptera.makaogift.exceptions.NotEnoughMoney;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -77,7 +78,7 @@ public class User {
         if (totalPrice > this.amount) {
             throw new NotEnoughMoney();
         }
-        
+
         this.amount -= product.price() * count;
     }
 
@@ -99,5 +100,9 @@ public class User {
 
     public UserCreationDto toCreationDto() {
         return new UserCreationDto(id, name, username);
+    }
+
+    public UserDto toUserDto() {
+        return new UserDto(name, amount);
     }
 }
