@@ -1,12 +1,16 @@
 package com.megaptera.makaogift.controllers;
 
 import com.megaptera.makaogift.application.CreateUserService;
+import com.megaptera.makaogift.application.GetUserService;
 import com.megaptera.makaogift.exceptions.ExistingUsername;
 import com.megaptera.makaogift.models.User;
+import com.megaptera.makaogift.utils.JwtUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +29,39 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
+    private GetUserService getUserService;
+
+    @MockBean
     private CreateUserService createUserService;
+
+    @SpyBean
+    private JwtUtil jwtUtil;
+
+    private String token;
+
+    @BeforeEach
+    void setup() {
+        token = jwtUtil.encode(1L);
+    }
+
+    @Test
+    void user() throws Exception {
+        given(getUserService.getUser(any()))
+                .willReturn(User.fake());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/me")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(content().string(
+                        containsString("\"amount\"")
+                ));
+    }
+
+    @Test
+    void userWithoutToken() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/me"))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
     void signUp() throws Exception {
