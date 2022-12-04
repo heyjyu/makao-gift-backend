@@ -1,6 +1,7 @@
 package com.megaptera.makaogift.models;
 
 import com.megaptera.makaogift.dtos.UserCreationDto;
+import com.megaptera.makaogift.exceptions.NotEnoughMoney;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -70,12 +71,14 @@ public class User {
         return amount;
     }
 
-    public UserCreationDto toCreationDto() {
-        return new UserCreationDto(id, name, username);
-    }
+    public void order(Product product, Integer count) {
+        Long totalPrice = product.price() * count;
 
-    public static User fake() {
-        return new User(1L, "홍길동", "myid", "Abcdef1!", 50000L);
+        if (totalPrice > this.amount) {
+            throw new NotEnoughMoney();
+        }
+        
+        this.amount -= product.price() * count;
     }
 
     public void setInitialAmount() {
@@ -88,5 +91,13 @@ public class User {
 
     public boolean authenticate(String password, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(password, this.password);
+    }
+
+    public static User fake() {
+        return new User(1L, "홍길동", "myid", "Abcdef1!", 50000L);
+    }
+
+    public UserCreationDto toCreationDto() {
+        return new UserCreationDto(id, name, username);
     }
 }

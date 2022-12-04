@@ -27,9 +27,9 @@ public class BackdoorController {
     public String setupDatabase() {
         LocalDateTime now = LocalDateTime.now();
 
-        // TODO: delete from order
         jdbcTemplate.execute("DELETE FROM product");
         jdbcTemplate.execute("DELETE FROM person");
+        jdbcTemplate.execute("DELETE FROM transaction");
 
         jdbcTemplate.update("" +
                         "INSERT INTO person(" +
@@ -55,7 +55,7 @@ public class BackdoorController {
     }
 
     @GetMapping("add-items")
-    public String addItems(@RequestParam int count) {
+    public String addItems(@RequestParam Integer count) {
         jdbcTemplate.execute("DELETE FROM product");
 
         IntStream.range(0, count)
