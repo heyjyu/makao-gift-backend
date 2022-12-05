@@ -1,16 +1,20 @@
 package com.megaptera.makaogift.controllers;
 
+import com.megaptera.makaogift.application.GetOrderService;
 import com.megaptera.makaogift.application.GetOrdersService;
 import com.megaptera.makaogift.application.OrderService;
 import com.megaptera.makaogift.dtos.OrderCreationDto;
+import com.megaptera.makaogift.dtos.OrderDto;
 import com.megaptera.makaogift.dtos.OrderRequestDto;
 import com.megaptera.makaogift.dtos.OrdersDto;
+import com.megaptera.makaogift.exceptions.InvalidUser;
 import com.megaptera.makaogift.exceptions.OrderFailed;
 import com.megaptera.makaogift.models.Order;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,10 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
     private OrderService orderService;
     private GetOrdersService getOrdersService;
+    private GetOrderService getOrderService;
 
-    public OrderController(OrderService orderService, GetOrdersService getOrdersService) {
+    public OrderController(
+            OrderService orderService, GetOrdersService getOrdersService, GetOrderService getOrderService) {
         this.orderService = orderService;
         this.getOrdersService = getOrdersService;
+        this.getOrderService = getOrderService;
     }
 
     @GetMapping
@@ -34,6 +41,13 @@ public class OrderController {
             @RequestAttribute Long userId
     ) {
         return getOrdersService.getOrders(userId);
+    }
+
+    @GetMapping("{id}")
+    public OrderDto detail(
+            @RequestAttribute Long userId, @PathVariable Long id
+    ) {
+        return getOrderService.getOrder(userId, id);
     }
 
     @PostMapping
@@ -55,5 +69,11 @@ public class OrderController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String orderFailed() {
         return "Order failed!";
+    }
+
+    @ExceptionHandler(InvalidUser.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String invalidUser() {
+        return "Invalid user!";
     }
 }
