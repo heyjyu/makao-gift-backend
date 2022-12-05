@@ -1,8 +1,12 @@
 package com.megaptera.makaogift.controllers;
 
+import com.megaptera.makaogift.application.GetOrderService;
 import com.megaptera.makaogift.application.GetOrdersService;
 import com.megaptera.makaogift.application.OrderService;
+import com.megaptera.makaogift.dtos.OrderDto;
 import com.megaptera.makaogift.dtos.OrdersDto;
+import com.megaptera.makaogift.dtos.ProductDto;
+import com.megaptera.makaogift.exceptions.InvalidUser;
 import com.megaptera.makaogift.exceptions.OrderFailed;
 import com.megaptera.makaogift.models.Order;
 import com.megaptera.makaogift.utils.JwtUtil;
@@ -16,6 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,20 +42,27 @@ class OrderControllerTest {
     @MockBean
     private GetOrdersService getOrdersService;
 
+    @MockBean
+    private GetOrderService getOrderService;
+
     @SpyBean
     private JwtUtil jwtUtil;
 
     private String token;
+    private ProductDto productDto;
+    private OrderDto orderDto;
 
     @BeforeEach
     void setup() {
         token = jwtUtil.encode(1L);
+        productDto = new ProductDto(1L, "치킨", "세상에서 제일 맛있는 치킨집", 10000L, "너무 맛있는 치킨", "https://chickenImage.com");
+        orderDto = new OrderDto(1L, productDto, 1, 10000L, "동길홍", "서울시 행복구 행복동", "행복하세요~", LocalDateTime.now());
     }
 
     @Test
     void list() throws Exception {
         given(getOrdersService.getOrders(1L))
-                .willReturn(new OrdersDto());
+                .willReturn(new OrdersDto(List.of(orderDto)));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/orders")
                         .header("Authorization", "Bearer " + token))
@@ -56,6 +70,31 @@ class OrderControllerTest {
                 .andExpect(content().string(
                         containsString("\"orders\"")
                 ));
+    }
+
+    @Test
+    void detail() throws Exception {
+        given(getOrderService.getOrder(any(), any()))
+                .willReturn(orderDto);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orders/1")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(content().string(
+                        containsString("\"product\"")
+                ));
+    }
+
+    @Test
+    void detailWithTokenOfOtherPerson() throws Exception {
+        given(getOrderService.getOrder(any(), any()))
+                .willThrow(InvalidUser.class);
+
+        String wrongToken = jwtUtil.encode(2L);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orders/1")
+                        .header("Authorization", "Bearer " + wrongToken))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
