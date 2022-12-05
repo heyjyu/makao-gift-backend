@@ -28,11 +28,11 @@ public class BackdoorController {
         LocalDateTime now = LocalDateTime.now();
 
         jdbcTemplate.execute("DELETE FROM product");
-        jdbcTemplate.execute("DELETE FROM person");
-        jdbcTemplate.execute("DELETE FROM transaction");
+        jdbcTemplate.execute("DELETE FROM users");
+        jdbcTemplate.execute("DELETE FROM orders");
 
         jdbcTemplate.update("" +
-                        "INSERT INTO person(" +
+                        "INSERT INTO users(" +
                         "  id, name, username, password," +
                         "  amount, created_at, updated_at" +
                         ")" +
@@ -42,7 +42,7 @@ public class BackdoorController {
         );
 
         jdbcTemplate.update("" +
-                        "INSERT INTO person(" +
+                        "INSERT INTO users(" +
                         "  id, name, username, password," +
                         "  amount, created_at, updated_at" +
                         ")" +

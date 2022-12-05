@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "PERSON")
+@Table(name = "USERS")
 public class User {
     @Id
     @GeneratedValue

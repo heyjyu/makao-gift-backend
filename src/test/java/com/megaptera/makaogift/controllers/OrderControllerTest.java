@@ -1,6 +1,8 @@
 package com.megaptera.makaogift.controllers;
 
+import com.megaptera.makaogift.application.GetOrdersService;
 import com.megaptera.makaogift.application.OrderService;
+import com.megaptera.makaogift.dtos.OrdersDto;
 import com.megaptera.makaogift.exceptions.OrderFailed;
 import com.megaptera.makaogift.models.Order;
 import com.megaptera.makaogift.utils.JwtUtil;
@@ -30,6 +32,9 @@ class OrderControllerTest {
     @MockBean
     private OrderService orderService;
 
+    @MockBean
+    private GetOrdersService getOrdersService;
+
     @SpyBean
     private JwtUtil jwtUtil;
 
@@ -38,6 +43,19 @@ class OrderControllerTest {
     @BeforeEach
     void setup() {
         token = jwtUtil.encode(1L);
+    }
+
+    @Test
+    void list() throws Exception {
+        given(getOrdersService.getOrders(1L))
+                .willReturn(new OrdersDto());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orders")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(content().string(
+                        containsString("\"orders\"")
+                ));
     }
 
     @Test
