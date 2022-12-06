@@ -1,5 +1,6 @@
 package com.megaptera.makaogift.controllers;
 
+import com.megaptera.makaogift.application.CountUserService;
 import com.megaptera.makaogift.application.CreateUserService;
 import com.megaptera.makaogift.application.GetUserService;
 import com.megaptera.makaogift.exceptions.ExistingUsername;
@@ -34,6 +35,9 @@ class UserControllerTest {
     @MockBean
     private CreateUserService createUserService;
 
+    @MockBean
+    private CountUserService countUserService;
+
     @SpyBean
     private JwtUtil jwtUtil;
 
@@ -54,6 +58,18 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(
                         containsString("\"amount\"")
+                ));
+    }
+
+    @Test
+    void userCountWithExistingUsername() throws Exception {
+        given(countUserService.count(any()))
+                .willReturn(1);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users?countOnly=true&username=\"myid\""))
+                .andExpect(status().isOk())
+                .andExpect(content().string(
+                        containsString("\"count\":1")
                 ));
     }
 
