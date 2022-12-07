@@ -1,13 +1,13 @@
 package com.megaptera.makaogift.application;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import jakarta.transaction.Transactional;
-
 import com.megaptera.makaogift.models.Product;
 import com.megaptera.makaogift.repositories.ProductRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
@@ -18,7 +18,10 @@ public class GetProductsService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public Page<Product> getProducts(Integer page, Integer size) {
+        Sort sort = Sort.by("id").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        return productRepository.findAll(pageable);
     }
 }
