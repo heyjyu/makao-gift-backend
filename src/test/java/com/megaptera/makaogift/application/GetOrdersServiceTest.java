@@ -7,6 +7,7 @@ import com.megaptera.makaogift.repositories.OrderRepository;
 import com.megaptera.makaogift.repositories.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +34,14 @@ class GetOrdersServiceTest {
         given(productRepository.findById(any()))
                 .willReturn(Optional.of(Product.fake(1L)));
 
-        given(orderRepository.findAllByUserId(any()))
-                .willReturn(List.of(Order.fake()));
+        given(orderRepository.findAllByUserId(any(), any()))
+                .willReturn(new PageImpl<>(List.of(Order.fake())));
 
-        OrdersDto ordersDto = getOrdersService.getOrders(1L);
+        Long userId = 1L;
+        Integer page = 1;
+        Integer size = 8;
+
+        OrdersDto ordersDto = getOrdersService.getOrders(userId, page, size);
 
         assertThat(ordersDto).isNotNull();
         assertThat(ordersDto.getOrders().get(0).getProduct().getName())

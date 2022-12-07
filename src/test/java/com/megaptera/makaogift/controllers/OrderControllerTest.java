@@ -5,6 +5,7 @@ import com.megaptera.makaogift.application.GetOrdersService;
 import com.megaptera.makaogift.application.OrderService;
 import com.megaptera.makaogift.dtos.OrderDto;
 import com.megaptera.makaogift.dtos.OrdersDto;
+import com.megaptera.makaogift.dtos.PageMetadataDto;
 import com.megaptera.makaogift.dtos.ProductDto;
 import com.megaptera.makaogift.exceptions.InvalidUser;
 import com.megaptera.makaogift.exceptions.OrderFailed;
@@ -61,12 +62,19 @@ class OrderControllerTest {
 
     @Test
     void list() throws Exception {
-        given(getOrdersService.getOrders(1L))
-                .willReturn(new OrdersDto(List.of(orderDto)));
+        Long userId = 1L;
+        Integer page = 1;
+        Integer size = 8;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/orders")
+        given(getOrdersService.getOrders(userId, page, size))
+                .willReturn(new OrdersDto(List.of(orderDto), new PageMetadataDto(1)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orders?page=1&size=8")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
+                .andExpect(content().string(
+                        containsString("\"totalPages\"")
+                ))
                 .andExpect(content().string(
                         containsString("\"orders\"")
                 ));
