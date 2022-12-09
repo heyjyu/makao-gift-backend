@@ -1,7 +1,6 @@
 package com.megaptera.makaogift.dtos;
 
 import jakarta.validation.constraints.Pattern;
-import org.springframework.security.core.parameters.P;
 
 public class UserRegistrationDto {
     @Pattern(regexp = "^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{3,7}$")
@@ -12,8 +11,6 @@ public class UserRegistrationDto {
 
     @Pattern(regexp = "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}")
     private String password;
-
-    private String passwordCheck;
 
     public UserRegistrationDto() {
     }
@@ -28,9 +25,5 @@ public class UserRegistrationDto {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getPasswordCheck() {
-        return passwordCheck;
     }
 }

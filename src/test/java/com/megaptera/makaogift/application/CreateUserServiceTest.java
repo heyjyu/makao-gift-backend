@@ -31,12 +31,11 @@ class CreateUserServiceTest {
         String name = "홍길동";
         String username = "myid";
         String password = "Abcdef1!";
-        String passwordCheck = "Abcdef1!";
 
         Long initialAmount = 50000L;
 
         User user = createUserService
-                .create(name, username, password, passwordCheck);
+                .create(name, username, password);
 
         assertThat(user).isNotNull();
         assertThat(user.amount()).isEqualTo(initialAmount);
@@ -48,12 +47,11 @@ class CreateUserServiceTest {
         String name = "홍길동";
         String username = "myid";
         String password = "Abcdef1!";
-        String passwordCheck = "Abcdef1!";
 
         given(userRepository.existsByUsername(username))
                 .willReturn(true);
 
         assertThrows(ExistingUsername.class,
-                () -> createUserService.create(name, username, password, passwordCheck));
+                () -> createUserService.create(name, username, password));
     }
 }
