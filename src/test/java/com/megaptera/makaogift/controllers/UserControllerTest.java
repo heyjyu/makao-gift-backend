@@ -62,6 +62,12 @@ class UserControllerTest {
     }
 
     @Test
+    void userWithoutToken() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/me"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void userCountWithExistingUsername() throws Exception {
         given(countUserService.count(any()))
                 .willReturn(1);
@@ -74,14 +80,8 @@ class UserControllerTest {
     }
 
     @Test
-    void userWithoutToken() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/me"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void signUp() throws Exception {
-        given(createUserService.create(any(), any(), any(), any()))
+        given(createUserService.create(any(), any(), any()))
                 .willReturn(User.fake());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
@@ -89,8 +89,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"myid\"," +
-                                "\"password\":\"Abcdef1!\"," +
-                                "\"passwordCheck\":\"Abcdef1!\"" +
+                                "\"password\":\"Abcdef1!\"" +
                                 "}"))
                 .andExpect(status().isCreated())
                 .andExpect(content().string(
@@ -105,8 +104,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"길동\"," +
                                 "\"username\":\"newid\"," +
-                                "\"password\":\"Abcdef1!\"," +
-                                "\"passwordCheck\":\"Abcdef1!\"" +
+                                "\"password\":\"Abcdef1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -118,8 +116,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"길동길동길동길동\"," +
                                 "\"username\":\"newid\"," +
-                                "\"password\":\"Abcdef1!\"," +
-                                "\"passwordCheck\":\"Abcdef1!\"" +
+                                "\"password\":\"Abcdef1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -131,8 +128,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"Gildong\"," +
                                 "\"username\":\"newid\"," +
-                                "\"password\":\"Abcdef1!\"," +
-                                "\"passwordCheck\":\"Abcdef1!\"" +
+                                "\"password\":\"Abcdef1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -144,8 +140,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"홍길동씨\"," +
-                                "\"password\":\"Abcdef1!\"," +
-                                "\"passwordCheck\":\"Abcdef1!\"" +
+                                "\"password\":\"Abcdef1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -157,8 +152,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"id1\"," +
-                                "\"password\":\"Abcdef1!\"," +
-                                "\"passwordCheck\":\"Abcdef1!\"" +
+                                "\"password\":\"Abcdef1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -170,15 +164,14 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"idididididididid1\"," +
-                                "\"password\":\"Abcdef1!\"," +
-                                "\"passwordCheck\":\"Abcdef1!\"" +
+                                "\"password\":\"Abcdef1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void signUpWithExistingUsername() throws Exception {
-        given(createUserService.create(any(), any(), any(), any()))
+        given(createUserService.create(any(), any(), any()))
                 .willThrow(new ExistingUsername("myid"));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
@@ -186,8 +179,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"myid\"," +
-                                "\"password\":\"Abcdef1!\"," +
-                                "\"passwordCheck\":\"Abcdef1!\"" +
+                                "\"password\":\"Abcdef1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -199,8 +191,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"myid\"," +
-                                "\"password\":\"Abcde1!\"," +
-                                "\"passwordCheck\":\"Abcde1!\"" +
+                                "\"password\":\"Abcde1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -212,8 +203,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"myid\"," +
-                                "\"password\":\"abcdef1!\"," +
-                                "\"passwordCheck\":\"abcdef1!\"" +
+                                "\"password\":\"abcdef1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -225,8 +215,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"myid\"," +
-                                "\"password\":\"ABCDEF1!\"," +
-                                "\"passwordCheck\":\"ABCDEF1!\"" +
+                                "\"password\":\"ABCDEF1!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -238,8 +227,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"myid\"," +
-                                "\"password\":\"Abcdefg!\"," +
-                                "\"passwordCheck\":\"Abcdefg!\"" +
+                                "\"password\":\"Abcdefg!\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }
@@ -251,21 +239,7 @@ class UserControllerTest {
                         .content("{" +
                                 "\"name\":\"홍길동\"," +
                                 "\"username\":\"myid\"," +
-                                "\"password\":\"Abcdefg1\"," +
-                                "\"passwordCheck\":\"Abcdefg1\"" +
-                                "}"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void signUpWithUnmatchedPassword() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{" +
-                                "\"name\":\"홍길동\"," +
-                                "\"username\":\"myid\"," +
-                                "\"password\":\"Abcdef1!\"," +
-                                "\"passwordCheck\":\"ABcdef1!\"" +
+                                "\"password\":\"Abcdefg1\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }

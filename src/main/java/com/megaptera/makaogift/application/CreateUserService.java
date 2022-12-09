@@ -19,7 +19,7 @@ public class CreateUserService {
     }
 
     public User create(
-            String name, String username, String password, String passwordCheck) {
+            String name, String username, String password) {
         if (userRepository.existsByUsername(username)) {
             throw new ExistingUsername(username);
         }

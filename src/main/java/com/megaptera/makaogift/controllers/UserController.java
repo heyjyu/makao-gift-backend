@@ -8,7 +8,6 @@ import com.megaptera.makaogift.dtos.UserCreationDto;
 import com.megaptera.makaogift.dtos.UserDto;
 import com.megaptera.makaogift.dtos.UserRegistrationDto;
 import com.megaptera.makaogift.exceptions.ExistingUsername;
-import com.megaptera.makaogift.exceptions.PasswordNotMatched;
 import com.megaptera.makaogift.models.User;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -60,13 +59,8 @@ public class UserController {
         String name = userRegistrationDto.getName();
         String username = userRegistrationDto.getUsername();
         String password = userRegistrationDto.getPassword();
-        String passwordCheck = userRegistrationDto.getPasswordCheck();
 
-        if (!password.equals(passwordCheck)) {
-            throw new PasswordNotMatched();
-        }
-
-        User user = createUserService.create(name, username, password, passwordCheck);
+        User user = createUserService.create(name, username, password);
 
         return user.toCreationDto();
     }
@@ -75,11 +69,5 @@ public class UserController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String existingUsername() {
         return "Username already exists!";
-    }
-
-    @ExceptionHandler(PasswordNotMatched.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String passwordNotMatched() {
-        return "Password not matched!";
     }
 }
