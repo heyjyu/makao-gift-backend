@@ -24,6 +24,8 @@ public class Order {
 
     private Integer count;
 
+    private Long unitPrice;
+
     @Column(name = "sendingTo")
     private String to;
 
@@ -40,11 +42,12 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long id, Long userId, Long productId, Integer count, String to, String address, String message) {
+    public Order(Long id, Long userId, Long productId, Integer count, Long unitPrice, String to, String address, String message) {
         this.id = id;
         this.userId = userId;
         this.productId = productId;
         this.count = count;
+        this.unitPrice = unitPrice;
         this.to = to;
         this.address = address;
         this.message = message;
@@ -64,6 +67,10 @@ public class Order {
 
     public Integer count() {
         return count;
+    }
+
+    public Long unitPrice() {
+        return unitPrice;
     }
 
     public String to() {
@@ -87,14 +94,14 @@ public class Order {
     }
 
     public static Order fake() {
-        return new Order(1L, 1L, 1L, 1, "동길홍", "서울시 행복구 행복동", "행복하세요~");
+        return new Order(1L, 1L, 1L, 1, 10000L, "동길홍", "서울시 행복구 행복동", "행복하세요~");
     }
 
     public OrderCreationDto toCreationDto() {
         return new OrderCreationDto(id, productId, count);
     }
 
-    public Long totalPrice(Long price) {
-        return price * count;
+    public Long totalPrice() {
+        return unitPrice * count;
     }
 }

@@ -9,8 +9,6 @@ class OrderTest {
     void totalPrice() {
         Order order = Order.fake();
 
-        Long unitPrice = 10000L;
-
-        assertThat(order.totalPrice(unitPrice)).isEqualTo(unitPrice * order.count());
+        assertThat(order.totalPrice()).isEqualTo(order.unitPrice() * order.count());
     }
 }

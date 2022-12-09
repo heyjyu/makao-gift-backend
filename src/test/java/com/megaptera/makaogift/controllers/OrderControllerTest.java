@@ -107,7 +107,7 @@ class OrderControllerTest {
 
     @Test
     void orderSuccess() throws Exception {
-        given(orderService.order(any(), any(), any(), any(), any(), any()))
+        given(orderService.order(any(), any(), any(), any(), any(), any(), any()))
                 .willReturn(Order.fake());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
@@ -116,6 +116,7 @@ class OrderControllerTest {
                         .content("{" +
                                 "\"productId\":1," +
                                 "\"count\":1," +
+                                "\"unitPrice\":10000," +
                                 "\"to\":\"동길홍\"," +
                                 "\"address\":\"서울시 행복구 행복동\"," +
                                 "\"message\":\"행복하세요~\"" +
@@ -134,6 +135,7 @@ class OrderControllerTest {
                         .content("{" +
                                 "\"productId\":1," +
                                 "\"count\":1," +
+                                "\"unitPrice\":10000," +
                                 "\"to\":\"동길홍\"," +
                                 "\"address\":\"서울시 행복구 행복동\"," +
                                 "\"message\":\"행복하세요~\"" +
@@ -149,6 +151,23 @@ class OrderControllerTest {
                         .content("{" +
                                 "\"productId\":1," +
                                 "\"count\":-1," +
+                                "\"unitPrice\":10000," +
+                                "\"to\":\"동길홍\"," +
+                                "\"address\":\"서울시 행복구 행복동\"," +
+                                "\"message\":\"행복하세요~\"" +
+                                "}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void orderWithWrongUnitPrice() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/orders")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "\"productId\":1," +
+                                "\"count\":1," +
+                                "\"unitPrice\":-10000," +
                                 "\"to\":\"동길홍\"," +
                                 "\"address\":\"서울시 행복구 행복동\"," +
                                 "\"message\":\"행복하세요~\"" +
@@ -164,6 +183,7 @@ class OrderControllerTest {
                         .content("{" +
                                 "\"productId\":1," +
                                 "\"count\":1," +
+                                "\"unitPrice\":10000," +
                                 "\"to\":\"길동\"," +
                                 "\"address\":\"서울시 행복구 행복동\"," +
                                 "\"message\":\"행복하세요~\"" +
@@ -179,6 +199,7 @@ class OrderControllerTest {
                         .content("{" +
                                 "\"productId\":1," +
                                 "\"count\":1," +
+                                "\"unitPrice\":10000," +
                                 "\"to\":\"길동길동길동길동\"," +
                                 "\"address\":\"서울시 행복구 행복동\"," +
                                 "\"message\":\"행복하세요~\"" +
@@ -194,6 +215,7 @@ class OrderControllerTest {
                         .content("{" +
                                 "\"productId\":1," +
                                 "\"count\":1," +
+                                "\"unitPrice\":10000," +
                                 "\"to\":\"gildong\"," +
                                 "\"address\":\"서울시 행복구 행복동\"," +
                                 "\"message\":\"행복하세요~\"" +
@@ -209,6 +231,7 @@ class OrderControllerTest {
                         .content("{" +
                                 "\"productId\":1," +
                                 "\"count\":1," +
+                                "\"unitPrice\":10000," +
                                 "\"to\":\"동길홍\"," +
                                 "\"address\":\"\"," +
                                 "\"message\":\"행복하세요~\"" +
@@ -224,6 +247,7 @@ class OrderControllerTest {
                         .content("{" +
                                 "\"productId\":1," +
                                 "\"count\":1," +
+                                "\"unitPrice\":10000," +
                                 "\"to\":\"동길홍\"," +
                                 "\"address\":\"서울시 행복구 행복동\"," +
                                 "\"message\":\"행복하세요행복하세요행복하세요행복하세요행복하세요행복하세요행복하세요행복하세요행복하세요행복하세요" +
@@ -234,7 +258,7 @@ class OrderControllerTest {
 
     @Test
     void orderFail() throws Exception {
-        given(orderService.order(any(), any(), any(), any(), any(), any()))
+        given(orderService.order(any(), any(), any(), any(), any(), any(), any()))
                 .willThrow(new OrderFailed());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/orders")
@@ -242,6 +266,7 @@ class OrderControllerTest {
                         .content("{" +
                                 "\"productId\":1," +
                                 "\"count\":1," +
+                                "\"unitPrice\":10000," +
                                 "\"to\":\"동길홍\"," +
                                 "\"address\":\"서울시 행복구 행복동\"," +
                                 "\"message\":\"행복하세요~\"" +

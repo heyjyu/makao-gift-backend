@@ -33,7 +33,7 @@ public class GetOrderService {
         Product product = productRepository.findById(order.productId())
                 .orElseThrow(() -> new ProductNotFound(order.productId()));
 
-        return new OrderDto(order.id(), product.toDto(), order.count(), order.totalPrice(product.price()),
+        return new OrderDto(order.id(), product.toDto(), order.count(), order.totalPrice(),
                 order.to(), order.address(), order.message(), order.createdAt());
     }
 }
