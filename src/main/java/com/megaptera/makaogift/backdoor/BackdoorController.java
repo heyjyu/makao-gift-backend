@@ -1,6 +1,7 @@
 package com.megaptera.makaogift.backdoor;
 
 import jakarta.transaction.Transactional;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import java.util.stream.IntStream;
 @RestController
 @RequestMapping("backdoor")
 @Transactional
+@Profile("!production")
 public class BackdoorController {
     private final JdbcTemplate jdbcTemplate;
     private final PasswordEncoder passwordEncoder;
