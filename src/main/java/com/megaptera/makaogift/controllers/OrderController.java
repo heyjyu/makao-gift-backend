@@ -75,7 +75,7 @@ public class OrderController {
     }
 
     @ExceptionHandler(InvalidUser.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public String invalidUser() {
         return "Invalid user!";
     }

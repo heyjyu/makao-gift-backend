@@ -102,7 +102,7 @@ class OrderControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/orders/1")
                         .header("Authorization", "Bearer " + wrongToken))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
