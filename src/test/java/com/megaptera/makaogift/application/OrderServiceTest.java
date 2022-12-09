@@ -49,10 +49,11 @@ class OrderServiceTest {
         Long userId = 1L;
         Long productId = 1L;
         Integer count = 1;
+        Long unitPrice = 1000L;
         String to = "동길홍";
         String address = "서울시 행복구 행복동";
         String message = "행복하세요~";
-        Order order = orderService.order(userId, productId, count, to, address, message);
+        Order order = orderService.order(userId, productId, count, unitPrice, to, address, message);
 
         assertThat(order).isNotNull();
         assertThat(user.amount()).isEqualTo(initialAmount - product.price() * count);
@@ -67,12 +68,13 @@ class OrderServiceTest {
         Long userId = 1L;
         Long productId = 1L;
         Integer count = 1;
+        Long unitPrice = 1000L;
         String to = "동길홍";
         String address = "서울시 행복구 행복동";
         String message = "행복하세요~";
 
         assertThrows(OrderFailed.class, () -> {
-            orderService.order(userId, productId, count, to, address, message);
+            orderService.order(userId, productId, count, unitPrice, to, address, message);
         });
     }
 
@@ -84,12 +86,13 @@ class OrderServiceTest {
         Long userId = 1L;
         Long productId = 1L;
         Integer count = 1;
+        Long unitPrice = 1000L;
         String to = "동길홍";
         String address = "서울시 행복구 행복동";
         String message = "행복하세요~";
 
         assertThrows(OrderFailed.class, () -> {
-            orderService.order(userId, productId, count, to, address, message);
+            orderService.order(userId, productId, count, unitPrice, to, address, message);
         });
     }
 }

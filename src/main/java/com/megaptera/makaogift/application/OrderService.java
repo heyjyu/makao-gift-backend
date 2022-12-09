@@ -27,7 +27,7 @@ public class OrderService {
         this.userRepository = userRepository;
     }
 
-    public Order order(Long userId, Long productId, Integer count, String to, String address, String message) {
+    public Order order(Long userId, Long productId, Integer count, Long unitPrice, String to, String address, String message) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new OrderFailed());
 
@@ -36,7 +36,7 @@ public class OrderService {
 
         user.order(product, count);
 
-        Order order = new Order(null, userId, productId, count, to, address, message);
+        Order order = new Order(null, userId, productId, count, unitPrice, to, address, message);
 
         orderRepository.save(order);
 

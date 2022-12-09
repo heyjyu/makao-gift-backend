@@ -11,6 +11,9 @@ public class OrderRequestDto {
     @Min(value = 1)
     private Integer count;
 
+    @Min(value = 0)
+    private Long unitPrice;
+
     @Pattern(regexp = "^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{3,7}$")
     private String to;
 
@@ -26,6 +29,10 @@ public class OrderRequestDto {
 
     public Integer getCount() {
         return count;
+    }
+
+    public Long getUnitPrice() {
+        return unitPrice;
     }
 
     public String getTo() {

@@ -61,6 +61,7 @@ public class OrderController {
                 userId,
                 orderRequestDto.getProductId(),
                 orderRequestDto.getCount(),
+                orderRequestDto.getUnitPrice(),
                 orderRequestDto.getTo(),
                 orderRequestDto.getAddress(),
                 orderRequestDto.getMessage());
